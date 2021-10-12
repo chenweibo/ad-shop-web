@@ -86,7 +86,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/guide/index'),
+        component: () => import('@/views/shop/list'),
         name: 'shop',
         meta: { title: '店铺管理', icon: 'el-icon-goods', noCache: true }
       }

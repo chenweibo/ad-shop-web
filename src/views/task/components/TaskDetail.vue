@@ -1,5 +1,5 @@
 <template>
-  <div class="createTask-container">
+  <div class="detail-container">
     <el-form ref="ruleForm" :model="postForm" :rules="rules" label-width="100px">
       <el-form-item label="店铺" prop="shop">
         <el-input v-model="postForm.shop" />
@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.createTask-container {
+.detail-container {
    padding: 40px 45px 20px 50px;
 
 }
