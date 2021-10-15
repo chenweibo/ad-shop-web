@@ -64,6 +64,11 @@ export function validEmail(email) {
   return reg.test(email)
 }
 
+export function validTel(tel) {
+  const reg = /^1[3456789]\d{9}$/
+  return reg.test(tel)
+}
+
 /**
  * @param {string} str
  * @returns {Boolean}

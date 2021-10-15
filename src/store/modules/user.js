@@ -4,7 +4,8 @@ import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  name: '',
+  id: undefined,
+  username: '',
   avatar: '',
   introduction: '',
   roles: []
@@ -17,8 +18,11 @@ const mutations = {
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_NAME: (state, username) => {
+    state.username = username
+  },
+  SET_ID: (state, id) => {
+    state.id = id
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -35,8 +39,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_TOKEN', data.tokenHead + data.token)
+        setToken(data.tokenHead + data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -54,17 +58,17 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
-
+        const { username, id } = data
+        const roles = ['admin']
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-
+        commit('SET_ID', id)
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        commit('SET_NAME', username)
+        commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+        commit('SET_INTRODUCTION', 'administrator')
         resolve(data)
       }).catch(error => {
         reject(error)
