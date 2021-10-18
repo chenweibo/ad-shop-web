@@ -58,7 +58,7 @@
 
 <script>
 
-import { fetchList } from '@/api/shop'
+import { fetchList, del } from '@/api/shop'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 export default {
   name: 'Shop',
@@ -93,7 +93,23 @@ export default {
       })
     },
     handleEdit() {},
-    handleDelete() {}
+    handleDelete(i, row) {
+      this.$confirm('此操作将永久删除店铺, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        del(row.id).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getList()
+        })
+      }).catch(() => {
+
+      })
+    }
   }
 }
 </script>
