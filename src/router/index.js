@@ -91,6 +91,13 @@ export const constantRoutes = [
     redirect: '/shop/index',
     children: [
       {
+        path: 'create',
+        component: () => import('@/views/shop/create'),
+        name: 'CreateShop',
+        meta: { title: '新增店铺', icon: 'edit' },
+        hidden: true
+      },
+      {
         path: 'index',
         component: () => import('@/views/shop/list'),
         name: 'shop',
