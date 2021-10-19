@@ -1,11 +1,18 @@
 <template>
   <div class="app-container">
+    <el-alert
+      style="margin-bottom:20px"
+      title="小提示"
+      type="warning"
+      description="每次编辑商铺后都需要重新审核。"
+      show-icon
+    />
     <div class="filter-container">
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         添加商铺
       </el-button>
     </div>
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="listLoading" height="550" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="编号">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -92,7 +99,9 @@ export default {
         this.listLoading = false
       })
     },
-    handleEdit() {},
+    handleEdit(i, row) {
+      this.$router.push({ name: 'EditShop', params: { id: row.id }})
+    },
     handleDelete(i, row) {
       this.$confirm('此操作将永久删除店铺, 是否继续?', '提示', {
         confirmButtonText: '确定',

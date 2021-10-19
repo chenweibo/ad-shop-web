@@ -33,7 +33,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">添加</el-button>
+        <el-button type="primary" @click="onSubmit">保存</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import { create } from '@/api/shop'
+import { create, show, update } from '@/api/shop'
 export default {
   name: 'ShopDetail',
   props: {
@@ -63,6 +63,7 @@ export default {
     return {
       headers: { 'Authorization': this.$store.state.user.token },
       form: {
+        id: undefined,
         shopType: undefined,
         taobaoName: '',
         taobaoLeader: '',
@@ -91,12 +92,23 @@ export default {
       }
     }
   },
+  created() {
+    if (this.isEdit) {
+      const id = this.$route.params && this.$route.params.id
+
+      this.fetchData(id)
+    }
+  },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           if (!this.isEdit) {
             create(this.form).then(res => {
+              this.$router.push({ name: 'shop' })
+            })
+          } else {
+            update(this.form.id, this.form).then(res => {
               this.$router.push({ name: 'shop' })
             })
           }
@@ -128,6 +140,11 @@ export default {
     },
     openExmple() {
       this.dialogVisible = true
+    },
+    fetchData(id) {
+      show(id).then(res => {
+        this.form = res.data
+      })
     }
   }
 }

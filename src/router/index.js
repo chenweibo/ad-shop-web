@@ -98,6 +98,13 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/shop/edit'),
+        name: 'EditShop',
+        meta: { title: '店铺编辑', noCache: true },
+        hidden: true
+      },
+      {
         path: 'index',
         component: () => import('@/views/shop/list'),
         name: 'shop',

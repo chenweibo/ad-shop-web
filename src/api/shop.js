@@ -16,11 +16,10 @@ export function create(data) {
   })
 }
 
-export function shop(query) {
+export function show(id) {
   return request({
-    url: '/shop/getShopInfo',
-    method: 'get',
-    params: query
+    url: '/shop/getShopInfo/' + id,
+    method: 'get'
   })
 }
 
