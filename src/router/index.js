@@ -159,7 +159,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/guide/index'),
+        component: () => import('@/views/finance'),
         name: 'momey',
         meta: { title: '资金明细', icon: 'el-icon-s-data', noCache: true }
       }
