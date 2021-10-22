@@ -37,3 +37,11 @@ export function del(id) {
     method: 'delete'
   })
 }
+
+export function getMyShop(query) {
+  return request({
+    url: '/shop/myshop',
+    method: 'get',
+    params: query
+  })
+}

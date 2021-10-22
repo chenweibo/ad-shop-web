@@ -21,10 +21,9 @@ export const taskType = [
   {
     label: '链接下单',
     value: 3
-  },
-  {
-    label: '二维码下单',
-    value: 4
   }
 
 ]
+
+export const taskTypeL = ['', '搜索下单', '淘口令下单', '链接下单']
+

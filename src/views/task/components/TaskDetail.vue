@@ -3,37 +3,46 @@
     <el-form ref="ruleForm" :model="postForm" :rules="rules" label-width="100px">
       <div class="f-title">选择平台及店铺</div>
       <el-form-item label="店铺" prop="shop">
-        <el-input v-model="postForm.shopName" />
+
+        <el-select v-model="postForm.shopId" placeholder="请选择">
+          <el-option
+            v-for="item in shopList"
+            :key="item.id"
+            :label="item.taobaoName"
+            :value="item.id"
+          />
+        </el-select>
+        <el-tag style="margin-left:10px">如果没有店铺选项说明店铺正在审核中，请审核通过后再发布任务</el-tag>
+
       </el-form-item>
       <div class="f-title">选择任务类型</div>
       <el-form-item label="任务类型" prop="task">
 
-        <el-radio v-for="(v,k) in taskType" :key="k" v-model="postForm.taskType" :label="v.value">{{ v.label }}</el-radio>
+        <el-radio v-for="(v,k) in taskType" :key="k" v-model="postForm.taskType" :label="v.value" @change="changeType">{{ v.label }}</el-radio>
 
       </el-form-item>
       <el-form-item label="返款类型" prop="task">
         <el-radio-group v-model="postForm.backType">
           <el-radio :label="1">平台返款</el-radio>
-          <el-radio :label="2">商家返款</el-radio>
+          <el-radio :label="2" :disabled="isBack===0?true:false">商家返款</el-radio>
         </el-radio-group>
         <el-tag type="danger" style="margin-left:10px">若选商家返款，免返款服务费，但需在48小时内返款。 平台返款暂时关闭。</el-tag>
       </el-form-item>
       <el-form-item label="实发商品" prop="task">
-        <el-radio-group v-model="postForm.backType">
+        <el-radio-group v-model="t">
           <el-radio :label="1">平台发礼品</el-radio>
         </el-radio-group>
       </el-form-item>
 
+      <!-- <el-form-item :label="curTypeName">
+        <el-input v-model="dynamicValidateForm.item.value" style="width:300px" /> 添加  <el-input v-model="dynamicValidateForm.item.count" style="width:100px" /> 单   <el-button type="primary" size="mini" @click.prevent="addTpye()">添加</el-button>
+      </el-form-item> -->
       <el-form-item
         v-for="(domain, index) in dynamicValidateForm.domains"
-        :key="domain.key"
-        :label="'关键词' + index"
-        :prop="'domains.' + index + '.value'"
-        :rules="{
-          required: true, message: '内容不能为空', trigger: 'blur'
-        }"
+        :key="index"
+        :label="curTypeName"
       >
-        <el-input v-model="domain.value" style="width:500px" /><el-button style="margin-left:10px" @click.prevent="removeDomain(domain)">新增</el-button><el-button @click.prevent="removeDomain(domain)">删除</el-button>
+        <el-input v-model="domain.value" style="width:300px" /> 添加  <el-input v-model="domain.count" style="width:100px" /> 单  <el-button v-show="index==0" type="primary" size="mini" style="margin-left:10px" @click.prevent="addTpye()">添加</el-button>  <el-button v-show="index!==0" size="mini" @click.prevent="removeTypeItem(domain)">删除</el-button>
       </el-form-item>
 
       <div class="f-title">填写任务信息</div>
@@ -46,8 +55,7 @@
       </el-form-item>
 
       <el-form-item label="商品主图" prop="task">
-        <el-input placeholder="请输入内容" />
-
+        <SingleImage v-model="postForm.productImg" />
       </el-form-item>
 
       <el-form-item label="客单价" prop="task">
@@ -99,18 +107,21 @@
   </div>
 </template>
 <script>
-import { taskBackType, taskType } from '@/utils/my'
+import { taskBackType, taskType, taskTypeL } from '@/utils/my'
+import { getMyShop } from '@/api/shop'
+import { mapGetters } from 'vuex'
+import SingleImage from '@/components/Upload/SingleImage4.vue'
 
 const defaultForm = {
   id: undefined,
-  shopId: 1,
+  shopId: undefined,
   shopName: '',
   taskType: 1,
   backType: 1,
   taskContent: '',
   productUrl: '',
   productName: '',
-  product_img: '',
+  productImg: '',
   price: 0,
   count: 1,
   startTime: '',
@@ -123,6 +134,7 @@ const defaultForm = {
 }
 export default {
   name: 'TaskDetail',
+  components: { SingleImage },
   props: {
     isEdit: {
       type: Boolean,
@@ -133,18 +145,51 @@ export default {
     return {
       postForm: Object.assign({}, defaultForm),
       rules: {},
-      dynamicValidateForm: {
-        domains: [{
-          value: ''
-        }],
-        tag: ''
-      },
       time: undefined,
       taskBackType: taskBackType,
-      taskType: taskType
+      taskType: taskType,
+      shopList: [],
+      t: 1,
+      curTypeName: '搜索下单',
+      dynamicValidateForm: {
+        domains: [{
+          count: '',
+          value: ''
+        }],
+        item: { count: '',
+          value: '' }
+      }
     }
   },
+  computed: {
+    ...mapGetters([
+      'isBack'
+    ])
+  },
+  created() {
+    this.getshop()
+  },
   methods: {
+    removeTypeItem(item) {
+      var index = this.dynamicValidateForm.domains.indexOf(item)
+      if (index !== -1) {
+        this.dynamicValidateForm.domains.splice(index, 1)
+      }
+    },
+    addTpye() {
+      this.dynamicValidateForm.domains.push({
+        value: '',
+        count: ''
+      })
+    },
+    changeType(v) {
+      this.curTypeName = taskTypeL[v]
+    },
+    getshop() {
+      getMyShop().then(res => {
+        this.shopList = res.data
+      })
+    },
     onSubmit() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {

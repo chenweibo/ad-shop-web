@@ -9,6 +9,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
+  isBack: undefined,
   momey: undefined
 }
 
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_MOMEY: (state, momey) => {
     state.momey = momey
+  },
+  SET_ISBACK: (state, isBack) => {
+    state.isBack = isBack
   }
 }
 
@@ -62,7 +66,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { username, id, momey } = data
+        const { username, id, momey, isBack } = data
         const roles = ['admin']
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -74,6 +78,7 @@ const actions = {
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_INTRODUCTION', 'administrator')
         commit('SET_MOMEY', momey)
+        commit('SET_ISBACK', isBack)
         resolve(data)
       }).catch(error => {
         reject(error)
