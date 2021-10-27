@@ -155,9 +155,7 @@ export default {
         domains: [{
           count: '',
           value: ''
-        }],
-        item: { count: '',
-          value: '' }
+        }]
       }
     }
   },

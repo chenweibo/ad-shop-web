@@ -26,4 +26,3 @@ export const taskType = [
 ]
 
 export const taskTypeL = ['', '搜索下单', '淘口令下单', '链接下单']
-
