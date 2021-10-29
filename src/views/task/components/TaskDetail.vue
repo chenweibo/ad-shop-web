@@ -2,7 +2,7 @@
   <div class="detail-container">
     <el-form ref="ruleForm" :model="postForm" :rules="rules" label-width="100px">
       <div class="f-title">选择平台及店铺</div>
-      <el-form-item label="店铺" prop="shop">
+      <el-form-item label="店铺" prop="shopId">
 
         <el-select v-model="postForm.shopId" placeholder="请选择">
           <el-option
@@ -47,18 +47,18 @@
 
       <div class="f-title">填写任务信息</div>
 
-      <el-form-item label="商品链接" prop="task">
+      <el-form-item label="商品链接" prop="productUrl">
         <el-input placeholder="请输入商品链接" />
       </el-form-item>
-      <el-form-item label="商品标题" prop="task">
+      <el-form-item label="商品标题" prop="productName">
         <el-input placeholder="请输入商品标题" />
       </el-form-item>
 
-      <el-form-item label="商品主图" prop="task">
+      <el-form-item label="商品主图" prop="productImg">
         <SingleImage v-model="postForm.productImg" />
       </el-form-item>
 
-      <el-form-item label="客单价" prop="task">
+      <el-form-item label="客单价" prop="price">
         <el-input-number v-model="postForm.price" :precision="2" :step="1" />
       </el-form-item>
 
@@ -144,7 +144,23 @@ export default {
   data() {
     return {
       postForm: Object.assign({}, defaultForm),
-      rules: {},
+      rules: {
+        shopId: [
+          { required: true, message: '请选择店铺', trigger: 'change' }
+        ],
+        productUrl: [
+          { required: true, message: '请选择商品缩略图', trigger: 'change' }
+        ],
+        productName: [
+          { required: true, message: '请输入产品名称', trigger: 'change' }
+        ],
+        productImg: [
+          { required: true, message: '请选择产品主图', trigger: 'change' }
+        ],
+        price: [
+          { required: true, message: '请输入客单价', trigger: 'change' }
+        ]
+      },
       time: undefined,
       taskBackType: taskBackType,
       taskType: taskType,
